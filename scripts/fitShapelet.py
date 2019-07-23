@@ -114,8 +114,8 @@ if __name__ == '__main__':
     else:
         nmax=[int(nmax[1])+1,int(nmax[0])+1] #input to numpy flip
 
-    print 'Using beta: (%f,%f) :: \tphi: %f radians :: \tcentre: x,y=(%f,%f) :: \tnmax: (%i,%i)'%(beta0[1],beta0[0],phi0,xc[1],xc[0],nmax[1]-1,nmax[0]-1)
-    print 'Fitting xc : %r\nFitting beta : %r\nFitting phi : %r'%(not(set_xc),not(set_beta),not(set_phi))
+    print('Using beta: (%f,%f) :: \tphi: %f radians :: \tcentre: x,y=(%f,%f) :: \tnmax: (%i,%i)'%(beta0[1],beta0[0],phi0,xc[1],xc[0],nmax[1]-1,nmax[0]-1))
+    print('Fitting xc : %r\nFitting beta : %r\nFitting phi : %r'%(not(set_xc),not(set_beta),not(set_phi)))
 
     if opts.mode.startswith('pol'):
         r0,th0=shapelets.shapelet.polarArray(xc,im.shape)
@@ -125,64 +125,64 @@ if __name__ == '__main__':
             if set_beta:
                 if set_phi:
                     #same as solveShapelets, no minimization
-                    print 'No parameters to minimize, solving for coefficients with input values'
+                    print('No parameters to minimize, solving for coefficients with input values')
                     beta1=beta0
                     phi1=phi0
                     xc1=xc
                 else:
-                    print 'Running minimization for phi only...'
+                    print('Running minimization for phi only...')
                     res=optimize.minimize(shapelets.decomp.chi2PolarFunc,[phi0],args=(nmax,im,nm,['phi'],beta0,None,xc,r0,th0),method=opts.fitterMethod,options={'xtol':opts.xtol,'ftol':opts.ftol,'maxiter':opts.maxiter})
-                    print res
+                    print(res)
                     beta1=beta0
                     phi1=res['x'][0]
                     xc1=xc
             else:
                 if set_phi:
-                    print 'Running minimization for beta only...'
+                    print('Running minimization for beta only...')
                     res=optimize.minimize(shapelets.decomp.chi2PolarFunc,[beta0[0], beta0[1]],args=(nmax,im,nm,['beta0','beta1'],[None,None],phi0,xc,r0,th0),method=opts.fitterMethod,options={'xtol':opts.xtol,'ftol':opts.ftol,'maxiter':opts.maxiter})
-                    print res
+                    print(res)
                     beta1=[res['x'][0],res['x'][1]]
                     phi1=phi0
                     xc1=xc
                 else:
-                    print 'Running minimization for beta and phi...'
+                    print('Running minimization for beta and phi...')
                     res=optimize.minimize(shapelets.decomp.chi2PolarFunc,[beta0[0], beta0[1], phi0],args=(nmax,im,nm,['beta0','beta1','phi'],[None,None],None,xc,r0,th0),method=opts.fitterMethod,options={'xtol':opts.xtol,'ftol':opts.ftol,'maxiter':opts.maxiter})
-                    print res
+                    print(res)
                     beta1=[res['x'][0],res['x'][1]]
                     phi1=res['x'][2]
                     xc1=xc
         else:
             if set_beta:
                 if set_phi:
-                    print 'Running minimization for centroid only...'
+                    print('Running minimization for centroid only...')
                     res=optimize.minimize(shapelets.decomp.chi2PolarFunc,[xc[0],xc[1]],args=(nmax,im,nm,['yc','xc'],beta0,phi0,[None,None],None,None),method=opts.fitterMethod,options={'xtol':opts.xtol,'ftol':opts.ftol,'maxiter':opts.maxiter})
-                    print res
+                    print(res)
                     beta1=beta0
                     phi1=phi0
                     xc1=[res['x'][0],res['x'][1]]
                 else:
-                    print 'Running minimization for phi and centroid...'
+                    print('Running minimization for phi and centroid...')
                     res=optimize.minimize(shapelets.decomp.chi2PolarFunc,[phi0,xc[0],xc[1]],args=(nmax,im,nm,['phi','yc','xc'],beta0,None,[None,None],None,None),method=opts.fitterMethod,options={'xtol':opts.xtol,'ftol':opts.ftol,'maxiter':opts.maxiter})
-                    print res
+                    print(res)
                     beta1=beta0
                     phi1=res['x'][0]
                     xc1=[res['x'][1],res['x'][2]]
             else:
                 if set_phi:
-                    print 'Running minimization for beta and centroid...'
+                    print('Running minimization for beta and centroid...')
                     res=optimize.minimize(shapelets.decomp.chi2PolarFunc,[beta0[0],beta0[1],xc[0],xc[1]],args=(nmax,im,nm,['beta0','beta1','yc','xc'],[None,None],phi0,[None,None],None,None),method=opts.fitterMethod,options={'xtol':opts.xtol,'ftol':opts.ftol,'maxiter':opts.maxiter})
-                    print res
+                    print(res)
                     beta1=[res['x'][0],res['x'][1]]
                     phi1=phi0
                     xc1=[res['x'][2],res['x'][3]]
                 else:
-                    print 'Running minimization for beta, phi and centroid...'
+                    print('Running minimization for beta, phi and centroid...')
                     res=optimize.minimize(shapelets.decomp.chi2PolarFunc,[beta0[0], beta0[1], phi0, xc[0], xc[1]],args=(nmax,im,nm),method=opts.fitterMethod,options={'xtol':opts.xtol,'ftol':opts.ftol,'maxiter':opts.maxiter})
-                    print res
+                    print(res)
                     beta1=[res['x'][0],res['x'][1]]
                     phi1=res['x'][2]
                     xc1=[res['x'][3],res['x'][4]]
-        print '\tDone'
+        print('\tDone')
 
         # Correct if beta is negative
         if beta1[0] < 0.: beta1[0] = np.abs(beta1[0])
@@ -191,14 +191,14 @@ if __name__ == '__main__':
         #scipy optimize brute force over a range of N values
         n0=1
         n1=opts.brute+1
-        print 'Running brute force for size of N on range [%i:%i]...'%(n0,n1-1)
+        print('Running brute force for size of N on range [%i:%i]...'%(n0,n1-1))
         nmax1=optimize.brute(shapelets.decomp.chi2nmaxPolarFunc,[np.s_[n0:n1:1]],args=(im,nm,beta1[0],beta1[1],phi1,xc1),finish=None)
         nmax1=[int(nmax1),int(nmax1)]
-        print 'Using %i x %i coefficients'%(nmax1[1],nmax1[0])
-        print '\tDone'
+        print('Using %i x %i coefficients'%(nmax1[1],nmax1[0]))
+        print('\tDone')
 
-        print 'Solution:'
-        print '\tbeta: (%f,%f) \tphi: %f rad \tcentroid: (%f, %f) (sub image: %f,%f) pixels \t ncoeffs: %i x %i'%(beta1[1], beta1[0], phi1, xc1[1]+extent[2], xc1[0]+extent[0], xc1[1], xc1[0], nmax1[1],nmax1[0])
+        print('Solution:')
+        print('\tbeta: (%f,%f) \tphi: %f rad \tcentroid: (%f, %f) (sub image: %f,%f) pixels \t ncoeffs: %i x %i'%(beta1[1], beta1[0], phi1, xc1[1]+extent[2], xc1[0]+extent[0], xc1[1], xc1[0], nmax1[1],nmax1[0]))
 
         #plot: data, model, residual: model-data, coeffs
         if show_plots:
@@ -251,10 +251,10 @@ if __name__ == '__main__':
             #radec=hdr['wcs'].wcs_pix2sky(np.array([ [xc1[1]+extent[0]+1,im0.shape[0]-(extent[2]+xc1[0])] ]),1)[0] #unit: degrees, FITS conventions: first pixel is (1,1)
             radec=hdr['wcs'].all_pix2world(np.array([ [xc1[1]+extent[0]+1,im0.shape[0]-(extent[2]+xc1[0])] ]),1)[0] #unit: degrees, FITS conventions: first pixel is (1,1)
 
-        print 'Centroid RA: %f (deg) Dec: %f (deg)'%(radec[0],radec[1])
+        print('Centroid RA: %f (deg) Dec: %f (deg)'%(radec[0],radec[1]))
 
         ofn=opts.ofn
-        print 'Writing to file:',ofn
+        print('Writing to file:',ofn)
         shapelets.fileio.writeLageurreCoeffs(ofn,coeffs,xc1,im.shape,beta1,phi1,nmax1,info=ifn,pos=[radec[0],radec[1],hdr['dra'],hdr['ddec']])
         
     elif opts.mode.startswith('cart'):
@@ -267,64 +267,64 @@ if __name__ == '__main__':
             if set_beta:
                 if set_phi:
                     #same as solveShapelets, no minimization
-                    print 'No parameters to minimize, solving for coefficients with input values'
+                    print('No parameters to minimize, solving for coefficients with input values')
                     beta1=beta0
                     phi1=phi0
                     xc1=xc
                 else:
-                    print 'Running minimization for phi only...'
+                    print('Running minimization for phi only...')
                     res=optimize.minimize(shapelets.decomp.chi2Func,[phi0],args=(nmax,im,nm,['phi'],beta0,None,xc,xx0,yy0),method=opts.fitterMethod,options={'xtol':opts.xtol,'ftol':opts.ftol,'maxiter':opts.maxiter})
-                    print res
+                    print(res)
                     beta1=beta0
                     phi1=res['x'][0]
                     xc1=xc
             else:
                 if set_phi:
-                    print 'Running minimization for beta only...'
+                    print('Running minimization for beta only...')
                     res=optimize.minimize(shapelets.decomp.chi2Func,[beta0[0], beta0[1]],args=(nmax,im,nm,['beta0','beta1'],[None,None],phi0,xc,xx0,yy0),method=opts.fitterMethod,options={'xtol':opts.xtol,'ftol':opts.ftol,'maxiter':opts.maxiter})
-                    print res
+                    print(res)
                     beta1=[res['x'][0],res['x'][1]]
                     phi1=phi0
                     xc1=xc
                 else:
-                    print 'Running minimization for beta and phi...'
+                    print('Running minimization for beta and phi...')
                     res=optimize.minimize(shapelets.decomp.chi2Func,[beta0[0], beta0[1], phi0],args=(nmax,im,nm,['beta0','beta1','phi'],[None,None],None,xc,xx0,yy0),method=opts.fitterMethod,options={'xtol':opts.xtol,'ftol':opts.ftol,'maxiter':opts.maxiter})
-                    print res
+                    print(res)
                     beta1=[res['x'][0],res['x'][1]]
                     phi1=res['x'][2]
                     xc1=xc
         else:
             if set_beta:
                 if set_phi:
-                    print 'Running minimization for centroid only...'
+                    print('Running minimization for centroid only...')
                     res=optimize.minimize(shapelets.decomp.chi2Func,[xc[0],xc[1]],args=(nmax,im,nm,['yc','xc'],beta0,phi0,[None,None],None,None),method=opts.fitterMethod,options={'xtol':opts.xtol,'ftol':opts.ftol,'maxiter':opts.maxiter})
-                    print res
+                    print(res)
                     beta1=beta0
                     phi1=phi0
                     xc1=[res['x'][0],res['x'][1]]
                 else:
-                    print 'Running minimization for phi and centroid...'
+                    print('Running minimization for phi and centroid...')
                     res=optimize.minimize(shapelets.decomp.chi2Func,[phi0,xc[0],xc[1]],args=(nmax,im,nm,['phi','yc','xc'],beta0,None,[None,None],None,None),method=opts.fitterMethod,options={'xtol':opts.xtol,'ftol':opts.ftol,'maxiter':opts.maxiter})
-                    print res
+                    print(res)
                     beta1=beta0
                     phi1=res['x'][0]
                     xc1=[res['x'][1],res['x'][2]]
             else:
                 if set_phi:
-                    print 'Running minimization for beta and centroid...'
+                    print('Running minimization for beta and centroid...')
                     res=optimize.minimize(shapelets.decomp.chi2Func,[beta0[0],beta0[1],xc[0],xc[1]],args=(nmax,im,nm,['beta0','beta1','yc','xc'],[None,None],phi0,[None,None],None,None),method=opts.fitterMethod,options={'xtol':opts.xtol,'ftol':opts.ftol,'maxiter':opts.maxiter})
-                    print res
+                    print(res)
                     beta1=[res['x'][0],res['x'][1]]
                     phi1=phi0
                     xc1=[res['x'][2],res['x'][3]]
                 else:
-                    print 'Running minimization for beta, phi and centroid...'
+                    print('Running minimization for beta, phi and centroid...')
                     res=optimize.minimize(shapelets.decomp.chi2Func,[beta0[0], beta0[1], phi0, xc[0], xc[1]],args=(nmax,im,nm),method=opts.fitterMethod,options={'xtol':opts.xtol,'ftol':opts.ftol,'maxiter':opts.maxiter})
-                    print res
+                    print(res)
                     beta1=[res['x'][0],res['x'][1]]
                     phi1=res['x'][2]
                     xc1=[res['x'][3],res['x'][4]]
-        print '\tDone'
+        print('\tDone')
 
         # Correct if beta is negative
         if beta1[0] < 0.: beta1[0] = np.abs(beta1[0])
@@ -333,14 +333,14 @@ if __name__ == '__main__':
         #scipy optimize brute force over a range of N values
         n0=1
         n1=opts.brute+1
-        print 'Running brute force for size of N on range [%i:%i]...'%(n0,n1-1)
+        print('Running brute force for size of N on range [%i:%i]...'%(n0,n1-1))
         nmax1=optimize.brute(shapelets.decomp.chi2nmaxFunc,[np.s_[n0:n1:1]],args=(im,nm,beta1[0],beta1[1],phi1,xc1),finish=None)
         nmax1=[int(nmax1),int(nmax1)]
-        print 'Using %i x %i coefficients'%(nmax1[1],nmax1[0])
-        print '\tDone'
+        print('Using %i x %i coefficients'%(nmax1[1],nmax1[0]))
+        print('\tDone')
 
-        print 'Solution:'
-        print '\tbeta: (%f,%f) \tphi: %f rad \tcentroid: (%f, %f) (sub image: %f,%f) pixels \t ncoeffs: %i x %i'%(beta1[1], beta1[0], phi1, xc1[1]+extent[2], xc1[0]+extent[0], xc1[1], xc1[0], nmax1[1],nmax1[0])
+        print('Solution:')
+        print('\tbeta: (%f,%f) \tphi: %f rad \tcentroid: (%f, %f) (sub image: %f,%f) pixels \t ncoeffs: %i x %i'%(beta1[1], beta1[0], phi1, xc1[1]+extent[2], xc1[0]+extent[0], xc1[1], xc1[0], nmax1[1],nmax1[0]))
 
         #plot: data, model, residual: model-data, coeffs
         if show_plots:
@@ -395,10 +395,10 @@ if __name__ == '__main__':
             #radec=hdr['wcs'].wcs_pix2sky(np.array([ [xc1[1]+extent[0]+1,im0.shape[0]-(extent[2]+xc1[0])] ]),1)[0] #unit: degrees, FITS conventions: first pixel is (1,1)
             radec=hdr['wcs'].wcs_pix2world(np.array([ [xc1[1]+extent[0]+1,im0.shape[0]-(extent[2]+xc1[0])] ]),1)[0] #unit: degrees, FITS conventions: first pixel is (1,1)
 
-        print 'Centroid RA: %f (deg) Dec: %f (deg)'%(radec[0],radec[1])
+        print('Centroid RA: %f (deg) Dec: %f (deg)'%(radec[0],radec[1]))
 
         ofn=opts.ofn
-        print 'Writing to file:',ofn
+        print('Writing to file:',ofn)
         shapelets.fileio.writeHermiteCoeffs(ofn,coeffs,xc1,im.shape,beta1,phi1,nmax1,info=ifn,pos=[radec[0],radec[1],hdr['dra'],hdr['ddec']])
         
     if show_plots:

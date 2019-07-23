@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
     if opts.polar:
         nmax=nmax[0]
-        print 'polar shapelets'
+        print('polar shapelets')
         fullImgReal=np.zeros((len(ry)*nmax*2,len(rx)*nmax))
         fullImgImag=np.zeros((len(ry)*nmax*2,len(rx)*nmax))
         yOffset=len(ry)*nmax
@@ -99,7 +99,7 @@ if __name__ == '__main__':
         plt.suptitle('Lageurre Basis Functions (Polar)')
     
     else:
-        print 'cartesian shapelets'
+        print('cartesian shapelets')
         fig=plt.figure()
         fullImg=np.zeros((len(ry)*nmax[1],len(rx)*nmax[0]))
         yy,xx=shapelets.shapelet.xy2Grid(ry,rx)
